@@ -1,0 +1,35 @@
+name: ollama
+
+volumes:
+  open-webui:
+  ollama:
+
+services:
+  open-webui:
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:main
+    restart: always
+    ports:
+      - "8888:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - open-webui:/app/backend/data
+
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    restart: always
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
