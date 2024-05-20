@@ -1,6 +1,6 @@
 # Ollama & Open WebUI
 
-Docker compose file to run Ollama and Open WebUI together.
+Docker Compose file to run [Ollama](https://github.com/ollama/ollama) and [Open WebUI](https://github.com/open-webui/open-webui) together.
 
 Uses Docker Volumes for storage
 

@@ -1,25 +1,15 @@
 name: ollama
 
 volumes:
-  open-webui:
-  ollama:
+  open-webui: {}
+  ollama: {}
 
 services:
-  open-webui:
-    container_name: open-webui
-    image: ghcr.io/open-webui/open-webui:main
-    restart: always
-    ports:
-      - "8888:8080"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - open-webui:/app/backend/data
-
   ollama:
     container_name: ollama
     image: ollama/ollama
     restart: always
+    pull_policy: always
     devices:
       - /dev/dri:/dev/dri
     volumes:
@@ -33,3 +23,18 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+  open-webui:
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:main
+    restart: always
+    pull_policy: always
+    ports:
+      - "8888:8080"
+    depends_on:
+      - ollama
+    environment:
+      - 'OLLAMA_BASE_URL=http://ollama:11434'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - open-webui:/app/backend/data
